@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "NexTierAI.UI (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "NexTierAI.UI (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

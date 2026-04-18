@@ -1,0 +1,11 @@
+# WinUI / Windows App SDK
+Generated Files/
+[Xx]64/
+[Xx]86/
+[Aa]rm64/
+Debug/
+Release/
+*.msix
+*.appx
+*.appxbundle
+*.msixbundle

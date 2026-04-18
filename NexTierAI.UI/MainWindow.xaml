@@ -1,0 +1,163 @@
+<Window
+    x:Class="NexTierAI.UI.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="NexTier AI | Cyber-Core Mentor">
+
+    <Grid x:Name="RootGrid" Background="#0A0A0A">
+        <Grid.Resources>
+            <SolidColorBrush x:Key="CyberAccentBrush" Color="#3B82F6"/>
+            <SolidColorBrush x:Key="CardBgBrush" Color="#171717"/>
+
+            <Style x:Key="InlineCodeStyle" TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="Consolas, Monospace"/>
+                <Setter Property="Foreground" Value="#F87171"/>
+                <Setter Property="FontSize" Value="15"/>
+            </Style>
+
+            <Storyboard x:Name="LogoColorAnim" RepeatBehavior="Forever">
+                <ColorAnimation Storyboard.TargetName="LogoGrad1" Storyboard.TargetProperty="Color" From="#3B82F6" To="#EC4899" Duration="0:0:4" AutoReverse="True"/>
+                <ColorAnimation Storyboard.TargetName="LogoGrad2" Storyboard.TargetProperty="Color" From="#8B5CF6" To="#10B981" Duration="0:0:4" AutoReverse="True"/>
+            </Storyboard>
+        </Grid.Resources>
+
+        <SplitView x:Name="MainSplitView" DisplayMode="Inline" IsPaneOpen="True" OpenPaneLength="300" PaneBackground="#111827">
+
+            <SplitView.Pane>
+                <Grid Padding="15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,20">
+                        <Button Background="Transparent" BorderThickness="0" FontSize="20" Click="ToggleSidebar_Click" Content="☰" Foreground="White" Width="40" Height="40"/>
+                        <TextBlock Text="SOHBETLER" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" FontSize="16" Margin="10,0,0,0"/>
+                    </StackPanel>
+
+                    <Button Grid.Row="1" Content="➕ Yeni Sohbet" Width="260" Height="45" Background="Transparent" 
+                            BorderBrush="#3B82F6" BorderThickness="1" Foreground="#3B82F6" FontWeight="Bold" CornerRadius="8" 
+                            Click="NewChat_Click" Margin="0,0,0,15"/>
+
+                    <TextBox x:Name="SearchBox" Grid.Row="2" PlaceholderText="Sohbetlerde ara..." Background="#1F2937" 
+                             BorderThickness="0" CornerRadius="8" Margin="0,0,0,15" Foreground="White" Padding="10" TextChanged="SearchBox_TextChanged"/>
+
+                    <ListView x:Name="SessionsListView" Grid.Row="3" SelectionMode="Single" SelectionChanged="SessionsListView_SelectionChanged" Foreground="White">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Padding="5" Width="240">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,10,0">
+                                        <TextBlock Text="{Binding Title}" FontWeight="SemiBold" FontSize="14" Foreground="#E5E5E5" TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Text="{Binding FormattedDate}" FontSize="11" Foreground="#9CA3AF" Margin="0,4,0,0"/>
+                                    </StackPanel>
+
+                                    <Button Grid.Column="1" Content="🗑️" Background="Transparent" BorderThickness="0" 
+                                            Foreground="#EF4444" FontSize="14" Click="DeleteSession_Click" Tag="{Binding Id}"
+                                            CornerRadius="5" ToolTipService.ToolTip="Sohbeti Sil"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </SplitView.Pane>
+
+            <SplitView.Content>
+                <Grid x:Name="ContentGrid" Background="#0A0A0A">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Row="0" Background="Transparent" Padding="20,20,30,20">
+                        <Grid>
+                            <Button Background="Transparent" BorderThickness="0" FontSize="20" Click="ToggleSidebar_Click" Content="☰" Foreground="White" HorizontalAlignment="Left"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                <TextBlock Text="NEXTIER AI" FontSize="20" FontWeight="Black" CharacterSpacing="50">
+                                    <TextBlock.Foreground>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                            <GradientStop x:Name="LogoGrad1" Color="#3B82F6" Offset="0.0"/>
+                                            <GradientStop x:Name="LogoGrad2" Color="#8B5CF6" Offset="1.0"/>
+                                        </LinearGradientBrush>
+                                    </TextBlock.Foreground>
+                                </TextBlock>
+                                <TextBlock Text="CORE_V3" FontSize="10" Foreground="#6B7280" VerticalAlignment="Bottom" Margin="10,0,0,3" FontWeight="Bold"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <Grid x:Name="WelcomeScreen" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock x:Name="WelcomeText" FontSize="36" FontWeight="SemiBold" Foreground="#E5E5E5" TextWrapping="Wrap" TextAlignment="Center" MaxWidth="800" LineHeight="45"/>
+                    </Grid>
+
+                    <ScrollViewer Grid.Row="1" x:Name="ChatScrollViewer" Padding="20" Visibility="Collapsed">
+                        <StackPanel x:Name="ChatPanel" Spacing="20" VerticalAlignment="Top" MaxWidth="1000" HorizontalAlignment="Center"/>
+                    </ScrollViewer>
+
+                    <Border Grid.Row="2" Background="#0F0F0F" Padding="20,15,20,25" BorderBrush="#1F2937" BorderThickness="0,1,0,0">
+                        <Grid MaxWidth="1100" HorizontalAlignment="Stretch">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Margin="0,0,0,12" HorizontalAlignment="Left">
+                                <Button x:Name="UploadButton" Content="📂 ÖĞRET" Height="36" Padding="15,0" Background="#171717" Foreground="{StaticResource CyberAccentBrush}" BorderBrush="{StaticResource CyberAccentBrush}" BorderThickness="1" FontWeight="Bold" CornerRadius="8" Click="UploadButton_Click"/>
+
+                                <Button x:Name="MemoryButton" Content="📚 HAFIZA" Height="36" Padding="15,0" Background="#171717" Foreground="#10B981" BorderBrush="#10B981" BorderThickness="1" FontWeight="Bold" CornerRadius="8">
+                                    <Button.Flyout>
+                                        <Flyout>
+                                            <StackPanel Width="250" Background="#171717" Padding="10">
+                                                <TextBlock Text="Öğretilen Dokümanlar" FontWeight="Bold" FontSize="16" Foreground="White" Margin="0,0,0,10"/>
+                                                <ListView x:Name="FilesListView" MaxHeight="250" Foreground="#E5E5E5">
+                                                    <ListView.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,5">
+                                                                <TextBlock Text="📄" />
+                                                                <TextBlock Text="{Binding}" />
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </ListView.ItemTemplate>
+                                                </ListView>
+                                            </StackPanel>
+                                        </Flyout>
+                                    </Button.Flyout>
+                                </Button>
+
+                                <ComboBox x:Name="ModeComboBox" Width="160" Height="36" Background="#171717" Foreground="White" BorderBrush="#262626" BorderThickness="1" CornerRadius="8" VerticalAlignment="Center" FontSize="14" FontWeight="SemiBold" SelectionChanged="ModeComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="Genel AI" IsSelected="True"/>
+                                    <ComboBoxItem Content="Web &amp; Frontend"/>
+                                    <ComboBoxItem Content="Veritabanı &amp; SQL"/>
+                                    <ComboBoxItem Content="Backend &amp; API"/>
+                                    <ComboBoxItem Content="DevOps &amp; Cloud"/>
+                                    <ComboBoxItem Content="Yapay Zeka (AI)"/>
+                                </ComboBox>
+                            </StackPanel>
+
+                            <Grid Grid.Row="1" ColumnSpacing="15">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBox x:Name="InputTextBox" Grid.Column="0" PlaceholderText="Sisteme komut veya soru gönder..." TextWrapping="Wrap" AcceptsReturn="True" MinHeight="55" MaxHeight="150" Background="#171717" Foreground="White" BorderBrush="#262626" BorderThickness="1" CornerRadius="12" Padding="20,15" FontSize="16" TextChanged="InputTextBox_TextChanged" PreviewKeyDown="InputTextBox_PreviewKeyDown"/>
+
+                                <Button x:Name="SendButton" Grid.Column="1" Content="🚀 GÖNDER" Width="120" Height="55" VerticalAlignment="Bottom" Background="{StaticResource CyberAccentBrush}" Foreground="White" FontWeight="Bold" CornerRadius="12" Opacity="0.5" Click="SendButton_Click"/>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </SplitView.Content>
+        </SplitView>
+    </Grid>
+</Window>
